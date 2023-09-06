@@ -1,0 +1,118 @@
+openapi: 3.0.0
+info:
+  title: DevOps_in_a_nutshell
+  version: 1.0.0
+servers:
+  - url: http://{{base_url}}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: release_acceptance_test
+paths:
+  /login:
+    post:
+      tags:
+        - release_acceptance_test
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: '{{username}}'
+                password: '{{password}}'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /movies:
+    post:
+      tags:
+        - release_acceptance_test
+      summary: Create a new movie Copy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: '{{movie_title}}'
+                genres: '{{movie_genres}}'
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - release_acceptance_test
+      summary: Get all movies Copy
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /movies/{movie_id}:
+    get:
+      tags:
+        - release_acceptance_test
+      summary: Get a specific movie Copy
+      parameters:
+        - name: movie_id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    patch:
+      tags:
+        - release_acceptance_test
+      summary: Partial update of a movie Copy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                genres: Adventure
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: movie_id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - release_acceptance_test
+      summary: Delete a movie Copy
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: movie_id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
