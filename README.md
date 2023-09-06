@@ -1,4 +1,4 @@
-# DevOps in the Nutshell
+# DevOps in a Nutshell
 
 ## Overview
 In this project, we've put together a backend web application built with Flask that connects to a MongoDB database. We utilize Nginx as the web server for serving the application. The project demonstrates the entire DevOps cycle, including development, testing, deployment, and monitoring.
