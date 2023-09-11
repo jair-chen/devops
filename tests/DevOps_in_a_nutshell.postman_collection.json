@@ -59,7 +59,7 @@
 					"response": []
 				},
 				{
-					"name": "Create a new movie Copy",
+					"name": "Create a new movie",
 					"event": [
 						{
 							"listen": "test",
@@ -123,7 +123,7 @@
 					"response": []
 				},
 				{
-					"name": "Get all movies Copy",
+					"name": "Get all movies",
 					"event": [
 						{
 							"listen": "test",
@@ -165,7 +165,7 @@
 					"response": []
 				},
 				{
-					"name": "Get a specific movie Copy",
+					"name": "Get a specific movie",
 					"event": [
 						{
 							"listen": "test",
@@ -207,7 +207,7 @@
 					"response": []
 				},
 				{
-					"name": "Partial update of a movie Copy",
+					"name": "Partial update of a movie",
 					"event": [
 						{
 							"listen": "test",
@@ -257,7 +257,7 @@
 					"response": []
 				},
 				{
-					"name": "Delete a movie Copy",
+					"name": "Delete a movie",
 					"event": [
 						{
 							"listen": "test",
@@ -416,7 +416,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://nginx"
+			"value": "http://nginx/api"
 		},
 		{
 			"key": "username",

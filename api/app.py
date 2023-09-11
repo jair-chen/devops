@@ -8,7 +8,7 @@ import functools
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'devops_in_a_nutshell'
-CORS(app)
+CORS(app, origins="*")
 
 # Connect to MongoDB
 client = MongoClient('mongodb://mongodb:27017/')
