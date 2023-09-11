@@ -34,7 +34,7 @@ paths:
     post:
       tags:
         - release_acceptance_test
-      summary: Create a new movie Copy
+      summary: Create a new movie
       requestBody:
         content:
           application/json:
@@ -53,7 +53,7 @@ paths:
     get:
       tags:
         - release_acceptance_test
-      summary: Get all movies Copy
+      summary: Get all movies
       responses:
         '200':
           description: Successful response
@@ -63,7 +63,7 @@ paths:
     get:
       tags:
         - release_acceptance_test
-      summary: Get a specific movie Copy
+      summary: Get a specific movie
       parameters:
         - name: movie_id
           in: path
@@ -78,7 +78,7 @@ paths:
     patch:
       tags:
         - release_acceptance_test
-      summary: Partial update of a movie Copy
+      summary: Partial update of a movie
       requestBody:
         content:
           application/json:
@@ -102,7 +102,7 @@ paths:
     delete:
       tags:
         - release_acceptance_test
-      summary: Delete a movie Copy
+      summary: Delete a movie
       security:
         - bearerAuth: []
       parameters:

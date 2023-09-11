@@ -10,10 +10,18 @@ services:
   mongodb:
     image: mongo:6.0.3
 
+  app:
+    build: ./app
+    image: demo-app
+    volumes:
+      - ./nginx/ui:/app/ui
+    command: cp -r /app/dist/ /app/ui/
+
   nginx:
     image: nginx:1.25.2
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/ui/dist:/var/www/html
       - ./nginx/logs:/var/log/nginx
     ports:
       - "80:80"
