@@ -18,6 +18,13 @@ In this project, we've put together a backend web application built with Flask t
 | Dashboard                      | Kibana is employed to craft an informative real-time dashboard, offering insights into application performance and status.|
 
 ## Screenshots
+### UI
+Login page / Movie list page / Create new movie modal
+
+<img src="images/ui_1.png" width="600px" />
+<img src="images/ui_2.png" width="600px" />
+<img src="images/ui_3.png" width="600px" />
+
 ### API Document
 The supported APIs of the Flask web application are displayed using Swagger UI.
 
