@@ -1,10 +1,10 @@
-from flask import Flask, request, jsonify, g
+from flask import Flask, request, jsonify, redirect, g
 from flask_cors import CORS
 from pymongo import MongoClient
-import uuid
 import jwt
 import datetime
 import functools
+import time
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'devops_in_a_nutshell'
@@ -14,6 +14,7 @@ CORS(app, origins="*")
 client = MongoClient('mongodb://mongodb:27017/')
 db = client['movie_database']
 movies_collection = db['movies']
+short_urls_collection = db['short_urls']
 
 # Simulated user database
 users = {
@@ -66,56 +67,60 @@ def login():
     
     return jsonify({'error': 'Invalid credentials'}), 401
 
-# Create a new movie
-@app.route('/movies', methods=['POST'])
-@role_check(allowed_roles=['admin'])
-def create_movie():
+def timestamp_to_base62(timestamp):
+    base62_chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    base62_string = ""
+
+    while timestamp > 0:
+        remainder = timestamp % 62
+        base62_string = base62_chars[remainder] + base62_string
+        timestamp //= 62
+
+    return base62_string
+
+# Create a new short URL
+@app.route('/shorturl', methods=['POST'])
+@role_check(allowed_roles=['admin', 'user'])
+def create_short_url():
     data = request.json
-    movie_id = str(uuid.uuid4())
-    data['_id'] = movie_id  # Adding the ID to the data before insertion
-    movies_collection.insert_one(data)
-    return jsonify({'message': 'Movie created', 'id': movie_id}), 201
+    long_url = data.get('long_url')
+    username = g.user.get('username')
 
-# Get all movies
-@app.route('/movies', methods=['GET'])
-def get_movies():
-    movies = list(movies_collection.find())
-    return jsonify(movies)
+    timestamp_ms = int(time.time() * 1000)
+    short_url = timestamp_to_base62(timestamp_ms)
 
-# Get a specific movie
-@app.route('/movies/<movie_id>', methods=['GET'])
-def get_movie(movie_id):
-    movie = movies_collection.find_one({'_id': movie_id})
-    if movie:
-        return jsonify(movie)
-    return jsonify({'error': 'Movie not found'}), 404
+    short_urls_document = {
+        '_id': short_url,
+        'long_url': long_url,
+        'user': username
+    }
+    short_urls_collection.insert_one(short_urls_document)
 
-# Update a movie
-@app.route('/movies/<string:movie_id>', methods=['PUT'])
-@role_check(allowed_roles=['admin'])
-def update_movie(movie_id):
-    data = request.json
-    if movies_collection.find_one({'_id': movie_id}):
-        data['_id'] = movie_id  # Ensure the ID is present in the data
-        movies_collection.replace_one({'_id': movie_id}, data)
-        return jsonify({'message': 'Movie updated'})
-    return jsonify({'error': 'Movie not found'}), 404
+    return jsonify({'message': 'Short URL created', 'short_url': short_url}), 201
 
-# Partial update of a movie (PATCH)
-@app.route('/movies/<string:movie_id>', methods=['PATCH'])
-@role_check(allowed_roles=['admin'])
-def patch_movie(movie_id):
-    data = request.json
-    if movies_collection.find_one({'_id': movie_id}):
-        movies_collection.update_one({'_id': movie_id}, {'$set': data})
-        return jsonify({'message': 'Movie patched'})
-    return jsonify({'error': 'Movie not found'}), 404
+@app.route('/shorturl/<short_url>', methods=['GET'])
+def redirect_to_long_url(short_url):
+    short_url_document = short_urls_collection.find_one({'_id': short_url})
+    if short_url_document:
+        long_url = short_url_document['long_url']
+        return redirect(long_url, code=302)
+    return jsonify({'error': 'Short URL not found'}), 404
 
-# Delete a movie
-@app.route('/movies/<string:movie_id>', methods=['DELETE'])
-@role_check(allowed_roles=['admin'])
-def delete_movie(movie_id):
-    if movies_collection.find_one({'_id': movie_id}):
-        movies_collection.delete_one({'_id': movie_id})
-        return jsonify({'message': 'Movie deleted'})
-    return jsonify({'error': 'Movie not found'}), 404
+# Get all short URLs
+@app.route('/shorturl', methods=['GET'])
+@role_check(allowed_roles=['admin', 'user'])
+def get_short_urls():
+    username = g.user.get('username')
+    short_urls = list(short_urls_collection.find({'user': username}))
+    return jsonify(short_urls)
+
+# Delete a short URL
+@app.route('/shorturl/<short_url>', methods=['DELETE'])
+@role_check(allowed_roles=['admin', 'user'])
+def delete_short_url(short_url):
+    username = g.user.get('username')
+    if short_urls_collection.find_one({'_id': short_url, 'user': username}):
+        short_urls_collection.delete_one({'_id': short_url, 'user': username})
+        return jsonify({'message': 'Short URL deleted'})
+    return jsonify({'error': 'Short URL not found'}), 404
+

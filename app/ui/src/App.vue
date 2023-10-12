@@ -3,7 +3,7 @@
     <div class="header">
       <div class="title">DevOps in a Nutshell</div>
       <router-link to="/login" class="nav-link">Login</router-link>
-      <router-link to="/movies" class="nav-link">Movies</router-link>
+      <router-link to="/shorturl" class="nav-link">Short URL</router-link>
     </div>
     <div v-if="errorMessage" class="global-error">
       <div class="error-content">{{ errorMessage }}</div>
@@ -45,7 +45,6 @@ export default {
 .title {
   color: #aaa;
   flex: 1;
-  text-align: left;
 }
 
 .nav-link {

@@ -25,7 +25,7 @@ export default {
         password: this.password
       })
 
-      this.$router.push({ name: 'movies' })
+      this.$router.push({ name: 'shorturl' })
     }
   }
 }

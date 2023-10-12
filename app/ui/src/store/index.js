@@ -7,15 +7,15 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: null,
-    movies: [],
+    short_urls: [],
     error: null
   },
   mutations: {
     setToken (state, token) {
       state.token = token
     },
-    setMovies (state, movies) {
-      state.movies = movies
+    setShortURLs (state, shortURLs) {
+      state.short_urls = shortURLs
     },
     setError (state, error) {
       state.error = error
@@ -35,19 +35,23 @@ export default new Vuex.Store({
       }
     },
 
-    async fetchMovies ({ commit }) {
+    async fetcShortURLs ({ commit, state }) {
       try {
-        const response = await axios.get('/api/movies')
-        const movies = response.data
-        commit('setMovies', movies)
+        const response = await axios.get('/api/shorturl', {
+          headers: {
+            Authorization: `Bearer ${state.token}`
+          }
+        })
+        const shortURLs = response.data
+        commit('setShortURLs', shortURLs)
       } catch (error) {
         commit('setError', error)
       }
     },
 
-    async deleteMovie ({ commit, state }, movieId) {
+    async deleteShortURL ({ commit, state }, shortURL) {
       try {
-        await axios.delete(`/api/movies/${movieId}`, {
+        await axios.delete(`/api/shorturl/${shortURL}`, {
           headers: {
             Authorization: `Bearer ${state.token}`
           }
@@ -57,11 +61,11 @@ export default new Vuex.Store({
       }
     },
 
-    async createMovie ({ commit, state }, { title, genres }) {
+    async createShortURL ({ commit, state }, { longURL }) {
       try {
         await axios.post(
-          '/api/movies',
-          { title, genres },
+          '/api/shorturl',
+          { long_url: longURL },
           {
             headers: {
               Authorization: `Bearer ${state.token}`

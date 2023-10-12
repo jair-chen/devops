@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/LoginView.vue'
-import MovieList from '../views/MoviesView.vue'
+import ShortURLs from '../views/ShortURLView.vue'
 
 Vue.use(VueRouter)
 
@@ -16,9 +16,9 @@ const routes = [
     component: Login
   },
   {
-    name: 'movies',
-    path: '/movies',
-    component: MovieList
+    name: 'shorturl',
+    path: '/shorturl',
+    component: ShortURLs
   }
 ]
 
