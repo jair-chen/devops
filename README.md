@@ -19,11 +19,11 @@ In this project, we've put together a backend web application built with Flask t
 
 ## Screenshots
 ### UI
-Login page / Movie list page / Create new movie modal
+Login page / Short URL page / Create new short URL modal
 
 <img src="images/ui_1.png" width="600px" />
-<img src="images/ui_2.png" width="600px" />
-<img src="images/ui_3.png" width="600px" />
+<img src="images/ui_2.png" width="800px" />
+<img src="images/ui_3.png" width="800px" />
 
 ### API Document
 The supported APIs of the Flask web application are displayed using Swagger UI.
