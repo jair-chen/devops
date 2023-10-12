@@ -59,7 +59,7 @@
 					"response": []
 				},
 				{
-					"name": "Create a new movie",
+					"name": "Create a new short URL",
 					"event": [
 						{
 							"listen": "test",
@@ -71,8 +71,8 @@
 									"\r",
 									"pm.test(\"Store movie ID in collection variables\", () => {\r",
 									"    const responseBody = pm.response.json();\r",
-									"    const movie_id = responseBody.id;\r",
-									"    pm.collectionVariables.set(\"movie_id\", movie_id);\r",
+									"    const short_url = responseBody.short_url;\r",
+									"    pm.collectionVariables.set(\"short_url\", short_url);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -103,7 +103,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"{{movie_title}}\",\r\n    \"genres\": \"{{movie_genres}}\"\r\n}",
+							"raw": "{\r\n    \"long_url\": \"{{long_url}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -111,19 +111,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/movies",
+							"raw": "{{base_url}}/shorturl",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"movies"
+								"shorturl"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get all movies",
+					"name": "Get all short URL",
 					"event": [
 						{
 							"listen": "test",
@@ -134,88 +134,16 @@
 									"});\r",
 									"\r",
 									"\r",
-									"pm.test(\"Response body contains movie information\", () => {\r",
-									"    const _id = pm.collectionVariables.get('movie_id')\r",
-									"    const title = pm.collectionVariables.get('movie_title')\r",
-									"    const genres = pm.collectionVariables.get('movie_genres')\r",
+									"pm.test(\"Response body contains short URL information\", () => {\r",
+									"    const _id = pm.collectionVariables.get('short_url')\r",
+									"    const long_url = pm.collectionVariables.get(\"long_url\")\r",
+									"    const user = pm.collectionVariables.get(\"username\")\r",
 									"    const movie = pm.response.json()[0]\r",
 									"    pm.expect(movie._id).eql(_id)\r",
-									"    pm.expect(movie.title).eql(title)\r",
-									"    pm.expect(movie.genres).eql(genres)\r",
+									"    pm.expect(movie.long_url).eql(long_url)\r",
+									"    pm.expect(movie.user).eql(user)\r",
 									"});\r",
 									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/movies",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"movies"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get a specific movie",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Response body contains movie information\", () => {\r",
-									"    const _id = pm.collectionVariables.get('movie_id')\r",
-									"    const title = pm.collectionVariables.get('movie_title')\r",
-									"    const genres = pm.collectionVariables.get('movie_genres')\r",
-									"    const movie = pm.response.json()\r",
-									"    pm.expect(movie._id).eql(_id)\r",
-									"    pm.expect(movie.title).eql(title)\r",
-									"    pm.expect(movie.genres).eql(genres)\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/movies/{{movie_id}}",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"movies",
-								"{{movie_id}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Partial update of a movie",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -232,32 +160,54 @@
 								}
 							]
 						},
-						"method": "PATCH",
+						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"genres\": \"Adventure\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "{{base_url}}/movies/{{movie_id}}",
+							"raw": "{{base_url}}/shorturl",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"movies",
-								"{{movie_id}}"
+								"shorturl"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete a movie",
+					"name": "Redirect to long URL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/shorturl/{{short_url}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"shorturl",
+								"{{short_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a short URL",
 					"event": [
 						{
 							"listen": "test",
@@ -285,13 +235,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/movies/{{movie_id}}",
+							"raw": "{{base_url}}/shorturl/{{short_url}}",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"movies",
-								"{{movie_id}}"
+								"shorturl",
+								"{{short_url}}"
 							]
 						}
 					},
@@ -347,7 +297,7 @@
 					"response": []
 				},
 				{
-					"name": "Create a new movie without token",
+					"name": "Create a new short URL without token",
 					"event": [
 						{
 							"listen": "test",
@@ -371,7 +321,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Mission: Impossible\",\r\n    \"genres\": \"Action\"\r\n}",
+							"raw": "{\r\n    \"title\": \"{{long_url}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -379,12 +329,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/movies",
+							"raw": "{{base_url}}/shorturl",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"movies"
+								"shorturl"
 							]
 						}
 					},
@@ -433,17 +383,13 @@
 			"value": ""
 		},
 		{
-			"key": "movie_id",
-			"value": ""
-		},
-		{
-			"key": "movie_title",
-			"value": "Mission: Impossible",
+			"key": "short_url",
+			"value": "",
 			"type": "string"
 		},
 		{
-			"key": "movie_genres",
-			"value": "Action",
+			"key": "long_url",
+			"value": "https://google.com/",
 			"type": "string"
 		}
 	]
